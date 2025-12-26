@@ -1,0 +1,111 @@
+/* CSS Document */
+
+.b58.btn{
+    color: #fff;
+    font-family: 'Chakra Petch', sans-serif;
+	width: 100%;
+    border-radius: 0;
+    padding-left: 60px;
+    position: relative;
+    transform: translateZ(0px);
+    transition: all 0.5s ease 0s;
+}
+
+.b58.btn:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #fff;
+    z-index: -1;
+    transform: scaleX(0);
+    transform-origin: 100% 50% 0;
+    transition: all 0.5s ease-out 0s;
+}
+
+.b58.btn:hover:after{
+    transform: scaleX(1);
+    transition-timing-function: cubic-bezier(0.52, 1.64, 0.37, 0.66);
+}
+
+.b58.btn span{
+    width: 40px;
+    height: 100%;
+    line-height: 40px;
+    background: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: all 0.3s linear 0s;
+}
+.b58.btn span:after{
+    content: "";
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    margin: auto 0;
+    position: absolute;
+    top: 0;
+    right: -6px;
+    bottom: 0;
+    transform: rotate(45deg);
+    transition: all 0.3s linear 0s;
+}
+
+.b58.btn.red{
+    border: 1px solid #fe6d6d;
+    background: #fe6d6d;
+}
+.b58.btn.red:hover,
+.b58.btn.red span{
+    color: #fe6d6d;
+}
+.b58.btn.red:hover span,
+.b58.btn.red:hover span:after{
+    background: #fe6d6d;
+}
+.b58.btn.blue{
+    border: 1px solid #3bb4e5;
+    background: #3bb4e5;
+}
+.b58.btn.blue:hover,
+.b58.btn.blue span{
+    color: #3bb4e5;
+}
+.b58.btn.blue:hover span,
+.b58.btn.blue:hover span:after{
+    background: #3bb4e5;
+}
+.b58.btn.orange{
+    border: 1px solid #ee955b;
+    background: #ee955b;
+}
+.b58.btn.orange:hover,
+.b58.btn.orange span{
+    color: #ee955b;
+}
+.b58.btn.orange:hover span,
+.b58.btn.orange:hover span:after{
+    background: #ee955b;
+}
+.b58.btn.green{
+    border: 1px solid #79d799;
+    background: #79d799;
+}
+.b58.btn.green:hover,
+.b58.btn.green span{
+    color: #79d799;
+}
+.b58.btn.green:hover span,
+.b58.btn.green:hover span:after{
+    background: #79d799;
+}
+.b58.btn:hover span{
+    color: #fff;
+}
+@media only screen and (max-width: 767px){
+    .b58.btn{ margin-bottom: 20px; }
+}

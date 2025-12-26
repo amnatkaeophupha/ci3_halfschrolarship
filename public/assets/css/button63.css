@@ -1,0 +1,82 @@
+/* CSS Document */
+
+.btn63{
+	font-family: 'Chakra Petch'; font-size: 10pt;
+    text-transform: uppercase;
+    border-radius: 0;
+    letter-spacing: 1px;
+    z-index: 1;
+    position: relative;
+    transition: all 0.4s ease 0s;
+}
+.btn63:before,
+.btn63:after{
+    content: "";
+    width: 0;
+    height: 3px;
+    background: #fff;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    transition: all 0.4s ease 0s;
+}
+.btn63:after{
+    top: auto;
+    left: auto;
+    bottom: 5px;
+    right: 5px;
+}
+.btn63:hover:before,
+.btn63:hover:after{
+    width: 50%;
+}
+.btn63.btn-sm:before,
+.btn63.btn-sm:after{
+    height: 2px;
+    top: 3px;
+}
+.btn63.btn-sm:after{
+    top: auto;
+    bottom: 3px;
+}
+.btn63.btn-xs:before,
+.btn63.btn-xs:after{
+    height: 1px;
+    top: 2px;
+}
+.btn63.btn-xs:after{
+    top: auto;
+    bottom: 2px;
+}
+.btn63.red{
+    color: #fe6d6d;
+    border: 1px solid #fe6d6d;
+}
+.btn63.red:hover{
+    background: #fe6d6d;
+    color: #fff;
+}
+.btn63.blue{
+    color: #3bb4e5;
+    border: 1px solid #3bb4e5;
+}
+.btn63.blue:hover{
+    background: #3bb4e5;
+    color: #fff;
+}
+.btn63.orange{
+    color: #ee955b;
+    border: 1px solid #ee955b;
+}
+.btn63.orange:hover{
+    background: #ee955b;
+    color: #fff;
+}
+.btn63.green{
+    color: #79d799;
+    border: 1px solid #79d799;
+}
+.btn63.green:hover{
+    background: #79d799;
+    color: #fff;
+}

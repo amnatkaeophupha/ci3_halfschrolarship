@@ -1,0 +1,80 @@
+.b38.btn {
+    border-radius: 0;
+    border: none;
+    text-transform: uppercase;
+    position: relative;
+    color: #fff;
+    transition: all 0.3s ease 0s;
+    padding: 7px;
+    font-size: 10pt;
+}
+
+.b38.btn:hover {
+    color: #fff;
+}
+
+.b38.btn:before {
+    content: "";
+    width: 0;
+    height: 0;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    box-shadow: -1px -1px 1px rgba(0, 0, 0, 0.4);
+    transition: all 0.3s ease 0s;
+}
+
+.b38.btn:hover:before {
+    width: 25px;
+    height: 25px;
+}
+
+.b38.btn.btn-sm:hover:before {
+    width: 17px;
+    height: 17px;
+}
+
+.b38.btn.btn-xs:hover:before {
+    width: 12px;
+    height: 12px;
+}
+
+.b38.btn.blue {
+    background: #5bc2d5;
+}
+
+.b38.btn.blue:before {
+    background: linear-gradient(315deg, #fff 45%, #5bc2d5 50%, #5bc2d5 56%, #fff 80%);
+}
+
+.b38.btn.red {
+    background: #ff3939;
+}
+
+.b38.btn.red:before {
+    background: linear-gradient(315deg, #fff 45%, #ff3939 50%, #ff3939 56%, #fff 80%);
+}
+
+.b38.btn.green {
+    background: #35c568;
+}
+
+.b38.btn.green:before {
+    background: linear-gradient(315deg, #fff 45%, #35c568 50%, #35c568 56%, #fff 80%);
+}
+
+.b38.btn.orange {
+    background: #f88030;
+}
+
+.b38.btn.orange:before {
+    background: linear-gradient(315deg, #fff 45%, #f88030 50%, #f88030 56%, #fff 80%);
+}
+
+.b38.btn.pink {
+    background: #e386ba;
+}
+
+.b38.btn.pink:before {
+    background: linear-gradient(315deg, #fff 45%, #e386ba 50%, #e386ba 56%, #fff 80%);
+}
