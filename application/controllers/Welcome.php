@@ -6,9 +6,11 @@ class Welcome extends CI_Controller {
 	public function __construct()
     {
         parent::__construct();
-        $this->load->model('Program_model');
 		$this->load->helper(array('form', 'url'));
-    	$this->load->library('form_validation'); 
+    	$this->load->library('form_validation');
+		$this->load->model('Program_model');
+		$this->load->model('Address_model'); 
+	
     }
 
 	public function index()
@@ -24,17 +26,32 @@ class Welcome extends CI_Controller {
 		$data['month_options'] = get_month_options();
 		$data['year_options']  = get_year_options(1980);
 
-		// $this->output->clear_all_cache();
-		// // ปิด browser cache
-		// $this->output
-		// ->set_header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0")
-		// ->set_header("Cache-Control: post-check=0, pre-check=0", false)
-		// ->set_header("Pragma: no-cache");
+		  // โหลดข้อมูลจังหวัด
+        $data['provinces'] = $this->Address_model->get_provinces();
 
-		$data['faculties'] = $this->Program_model->get_faculty();
 		$data['content'] = 'register_form';
 		$this->load->view('layout', $data);
 	}
+
+    // AJAX: ดึงอำเภอตามจังหวัด
+    public function get_amphoe()
+    {
+        $province_code = $this->input->post('province_code');
+        $amphoes = $this->Address_model->get_amphoe_by_province($province_code);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($amphoes);
+    }
+
+	 // AJAX: ดึงตำบล + zip ตามอำเภอ
+    public function get_district()
+    {
+        $amphoe_code = $this->input->post('amphoe_code');
+        $districts = $this->Address_model->get_district_by_amphoe($amphoe_code);
+
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode($districts);
+    }
 
 	public function get_program()
     {
@@ -69,7 +86,6 @@ class Welcome extends CI_Controller {
 		$this->form_validation->set_rules('education_level', 'ระดับการศึกษา', 'required');
 		$this->form_validation->set_rules('gpa', 'เกรดเฉลี่ยสะสม', 'trim|required|decimal'); // ถ้าเกรดเป็นทศนิยม
 
-		$this->form_validation->set_rules('fac_id', 'คณะ', 'required');
 		$this->form_validation->set_rules('pro_id', 'สาขาวิชา', 'required');
 
 		// ---------- ถ้าตรวจสอบแล้วไม่ผ่าน ----------
@@ -114,7 +130,6 @@ class Welcome extends CI_Controller {
 				'education_level'      => $this->input->post('education_level'),
 				'gpa'                  => $this->input->post('gpa'),
 
-				'fac_id'               => $this->input->post('fac_id'),
 				'pro_id'               => $this->input->post('pro_id'),
 
 				'family_income'        => $this->input->post('family_income'),
@@ -153,11 +168,4 @@ class Welcome extends CI_Controller {
 		$this->load->view('layout', $data);
 
 	}
-
-	public function upload_success()
-	{
-		$data['content'] = 'upload_doc';
-		$this->load->view('layout', $data);
-	}
-
 }

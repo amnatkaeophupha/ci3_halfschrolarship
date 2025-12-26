@@ -56,12 +56,15 @@
 							</div>
 							<div class="col-md-6">
 								<div class="form-group"><label>จังหวัด</label>
-									<?php $provinces = $this->db->query('SELECT * FROM provinces'); ?>
-									<select name="school_province" id="school_province" class="form-control">
+									<select name="school_province" class="form-control">
 										<option value="">-- เลือกจังหวัด --</option>
-										<?php foreach ($provinces->result() as $province): ?>
-											<option value="<?= $province->name_th ?>"><?= $province->name_th ?></option>
-										<?php endforeach; ?>
+										<?php if (!empty($provinces)): ?>
+											<?php foreach($provinces as $p): ?>
+												<option value="<?= $p->province_code; ?>">
+													<?= $p->province_name_th; ?>
+												</option>
+											<?php endforeach; ?>
+										<?php endif; ?>
 									</select>
 								</div>
 							</div>
@@ -133,16 +136,42 @@
 								<div class="form-group"><label>ถนน</label><input type="text" name="address_road" class="form-control" style="width:100%;"></div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>ตำบล/แขวง</label><input type="text" name="address_subdistrict" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>จังหวัด</label>
+									<select name="address_province" id="address_province" class="form-control">
+										<option value="">-- เลือกจังหวัด --</option>
+										<?php if (!empty($provinces)): ?>
+											<?php foreach($provinces as $p): ?>
+												<option value="<?= $p->province_code; ?>">
+													<?= $p->province_name_th; ?>
+												</option>
+											<?php endforeach; ?>
+										<?php endif; ?>
+									</select>
+								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>อำเภอ/เขต</label><input type="text" name="address_district" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>อำเภอ/เขต</label>
+									<select name="address_district" id="address_amphoe" class="form-control">
+										<option value="">-- เลือกอำเภอ/เขต --</option>
+									</select>
+								</div>
+							</div>														
+							<div class="col-md-3">
+								<div class="form-group">
+									<label>ตำบล/แขวง</label>
+									<select name="address_subdistrict" id="address_district" class="form-control">
+										<option value="">-- เลือกตำบล/แขวง --</option>
+									</select>
+								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>จังหวัด</label><input type="text" name="address_province" class="form-control" style="width:100%;"></div>
-							</div>
-							<div class="col-md-3">
-								<div class="form-group"><label>รหัสไปรษณีย์</label><input type="text" name="address_zipcode" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>รหัสไปรษณีย์</label>
+									<input type="text" name="address_zipcode" id="address_zipcode"
+										class="form-control" style="width:100%;" readonly>
+								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group"><label>เบอร์โทรศัพท์</label><input type="text" name="phone" class="form-control" style="width:100%;"></div>
@@ -173,22 +202,16 @@
 							<div class="col-md-12">
 								<div class="row">
 									<div class="col-md-12">
-										<p>สาขาวิชาที่ต้องการสมัครขอรับทุนการศึกษา (ให้เลือกจากใบสมัครรอบที่ 2 ARU : Quota) : </p>
+										<p>สาขาวิชาที่ต้องการสมัครขอรับทุนการศึกษา "ทุนคนละครึ่ง" สามารถเลือกได้เพียงสาขาวิชาเดียวเท่านั้น</p>
 									</div>
-									<div class="col-md-6">
-										<div class="form-group"><label>เลือกคณะ</label>
-										<select name="fac_id" id="fac_id" class="form-control">
-											<option value="">-- เลือกคณะ --</option>
-											<?php foreach ($faculties as $fac): ?>
-												<option value="<?= $fac->fac_id ?>"><?= $fac->fac_name ?></option>
-											<?php endforeach; ?>
-										</select>
-										</div>
-									</div>
-									<div class="col-md-6">
+									<div class="col-md-12">
+										<?php $program = $this->db->query('SELECT * FROM program'); ?>
 										<div class="form-group"><label>เลือกสาขา</label>
 										<select name="pro_id" id="pro_id" class="form-control">
 											<option value="">-- เลือกสาขา --</option>
+											<?php foreach ($program->result()  as $pro): ?>
+											<option value="<?= $pro->pro_id ?>">สาขา<?= $pro->pro_name ?></option>
+											<?php endforeach; ?>
 										</select>
 										</div>
 									</div>
@@ -218,7 +241,7 @@
 							</div>	
 							<div class="col-md-12 text-center">
 								<p class="text-danger">เมื่อส่งข้อมูลสมัครแล้วต้องทำการส่งเอกสารที่เกี่ยวข้องต่อไป</p>
-								<button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px 20px;">ส่งใบสมัคร</button>
+								<button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px 20px;">ต่อไป</button>
 							</div>
 						</form>	
 						</div>

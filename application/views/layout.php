@@ -129,8 +129,6 @@
 						</li>  -->
 						<li><a href="<?php echo base_url(); ?>">หน้าแรกทุนคนละครึ่ง</a></li> 
 						<li><a href="<?php echo base_url('public/945.pdf'); ?>" target="_blank" >ประกาศ</a></li> 
-						<li><a href="">เอกสารดาวน์โหลด</a></li> 
-						<li><a href="">ตรวจสอบการสมัคร</a></li> 
 						<li><a href="">ประกาศผล</a></li> 
 						<li><a href="">ติดต่อเรา</a></li>						
 					</ul>
@@ -179,71 +177,6 @@
 <script src="<?php echo base_url('public/bootstrap-3.3.7-dist'); ?>/js/bootstrap.min.js"></script>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<!-- <script>
-$(document).ready(function(){
-    $('#fac_id').change(function(){
-        var fac_id = $(this).val();
-
-        $('#pro_id').html('<option value="">กำลังโหลด...</option>');
-
-        $.ajax({
-            url: "http://localhost/halfschrolarship/index.php/welcome/get_program",
-            method: "POST",
-            data: { fac_id: fac_id },
-            dataType: "json",
-            success: function(data){
-
-                var html = '<option value="">-- เลือกสาขา --</option>';
-
-                $.each(data, function(i, item){
-                    html += '<option value="'+item.pro_id+'">ปริญญา'+item.pro_degree+' => สาขา'+item.pro_name+'</option>';
-                });
-
-                $('#pro_id').html(html);
-            }
-        });
-    });
-
-});
-</script> -->
-<script>
-$(document).ready(function () {
-
-    // เก็บ pro_id เดิมของผู้สมัคร (ถ้าเป็นหน้าแก้ไข)
-    var selectedProId = "<?= isset($applicant) ? $applicant->pro_id : '' ?>";
-
-    $('#fac_id').change(function () {
-        var fac_id = $(this).val();
-
-        $('#pro_id').html('<option value="">กำลังโหลด...</option>');
-
-        $.ajax({
-            url: "http://localhost/halfschrolarship/index.php/welcome/get_program",
-            method: "POST",
-            data: { fac_id: fac_id },
-            dataType: "json",
-            success: function (data) {
-
-                var html = '<option value="">-- เลือกสาขา --</option>';
-
-                $.each(data, function (i, item) {
-                    // ถ้า pro_id จากฐานข้อมูล ตรงกับ selectedProId → ใส่ selected
-                    var sel = (item.pro_id == selectedProId) ? ' selected' : '';
-                    html += '<option value="' + item.pro_id + '"' + sel + '>'
-                          + item.pro_degree + ' (' + item.pro_name + ')</option>';
-                });
-
-                $('#pro_id').html(html);
-            }
-        });
-    });
-
-    // ถ้าเป็นหน้าแก้ไข และมี fac_id เดิม → trigger change เพื่อโหลดสาขาเดิม
-    <?php if (isset($applicant) && !empty($applicant->fac_id)): ?>
-        $('#fac_id').trigger('change');
-    <?php endif; ?>
-
-});
-</script>
+<script src="<?php echo base_url('public'); ?>/register_form.js"></script>
 </body>
 </html>

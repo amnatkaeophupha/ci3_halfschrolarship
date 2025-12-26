@@ -6,10 +6,11 @@ class Member extends CI_Controller {
 	public function __construct()
     {
         parent::__construct();
-        $this->load->model('Program_model');
 		$this->load->helper(array('form', 'url'));
+		$this->load->model('Address_model');
     	$this->load->library('form_validation'); 
 		$this->load->library('upload');
+		$this->load->library(array('session', 'form_validation'));
     }
 
 	public function index()
@@ -18,14 +19,14 @@ class Member extends CI_Controller {
 		$this->load->view('layout', $data);
 	}
 
-	public function view($id)
+	public function view($id=null)
 	{	
 		$data['day_options']   = get_day_options();
 		$data['month_options'] = get_month_options();
 		$data['year_options']  = get_year_options(1980);
 		
 		$id = $this->uri->segment(3);
-		$data['faculties'] = $this->Program_model->get_faculty();
+
 		$data['applicant'] = $this->db
 			->where('id', $id)
 			->get('applicant')
@@ -36,6 +37,24 @@ class Member extends CI_Controller {
 			redirect('welcome/index');
     		exit;
 		}
+
+		// โหลดจังหวัดทั้งหมด
+        $data['provinces'] = $this->Address_model->get_provinces();
+        // โหลดอำเภอของจังหวัดที่บันทึกไว้ (ถ้ามี)
+        $data['amphoes'] = array();
+        if (!empty($data['applicant']->address_province)) {
+            $data['amphoes'] = $this->Address_model
+                ->get_amphoe_by_province($data['applicant']->address_province);
+        }
+
+        // โหลดตำบลของอำเภอที่บันทึกไว้ (ถ้ามี)
+        $data['districts'] = array();
+        if (!empty($data['applicant']->address_district)) {
+            $data['districts'] = $this->Address_model
+                ->get_district_by_amphoe($data['applicant']->address_district);
+        }
+        // เอาไว้ใช้แสดง dropdown สาขาเหมือนฟอร์มสมัคร
+        $data['program'] = $this->db->query('SELECT * FROM program');
 
 		$data['content'] = 'register_edit';
 		$this->load->view('layout', $data);
@@ -88,7 +107,6 @@ class Member extends CI_Controller {
 		$this->form_validation->set_rules('education_level', 'ระดับการศึกษา', 'required');
 		$this->form_validation->set_rules('gpa', 'เกรดเฉลี่ยสะสม', 'trim|required');
 
-		$this->form_validation->set_rules('fac_id', 'คณะ', 'required');
 		$this->form_validation->set_rules('pro_id', 'สาขาวิชา', 'required');
 
 		// ---------------- ถ้า validate ไม่ผ่าน ----------------
@@ -108,7 +126,7 @@ class Member extends CI_Controller {
 			// ถ้าใช้ตัวเลือกวัน/เดือน/ปี + faculties ต้องเตรียมให้เหมือนตอนแรก
 			$this->load->model('Program_model');
 			$data['applicant']     = $applicant;
-			$data['faculties']     = $this->Program_model->get_faculty();
+
 			$data['day_options']   = get_day_options();
 			$data['month_options'] = get_month_options();
 			$data['year_options']  = get_year_options(1980);
@@ -146,7 +164,6 @@ class Member extends CI_Controller {
 			'education_level'      => $this->input->post('education_level'),
 			'gpa'                  => $this->input->post('gpa'),
 
-			'fac_id'               => $this->input->post('fac_id'),
 			'pro_id'               => $this->input->post('pro_id'),
 
 			'family_income'        => $this->input->post('family_income'),
@@ -186,7 +203,6 @@ class Member extends CI_Controller {
 		// map ชื่อ field => คำต่อท้ายไฟล์
 		$file_fields = array(
 			'file_cid'        => 'cid',
-			'file_house'      => 'house',
 			'file_transcript' => 'transcript',
 			'file_portfolio'  => 'portfolio'
 		);
