@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : www.webaru
+ Source Server         : wampp
  Source Server Type    : MySQL
- Source Server Version : 100526 (10.5.26-MariaDB-0+deb11u2)
- Source Host           : www.aru.ac.th:3306
- Source Schema         : ci3_halfschrolarship
+ Source Server Version : 100427 (10.4.27-MariaDB)
+ Source Host           : localhost:3306
+ Source Schema         : ci_halfschrolarship
 
  Target Server Type    : MySQL
- Target Server Version : 100526 (10.5.26-MariaDB-0+deb11u2)
+ Target Server Version : 100427 (10.4.27-MariaDB)
  File Encoding         : 65001
 
- Date: 26/12/2025 16:46:54
+ Date: 30/12/2025 14:19:40
 */
 
 SET NAMES utf8mb4;
@@ -22,12 +22,12 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `provinces`;
 CREATE TABLE `provinces`  (
-  `code` int NOT NULL,
-  `name_th` varchar(150) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-  `name_th_short` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
-  `name_en` varchar(150) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `province_code` int NOT NULL,
+  `province_name_th` varchar(150) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `province_name_th_short` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
+  `province_name_en` varchar(150) CHARACTER SET utf8 COLLATE utf8_unicode_ci NULL DEFAULT '',
   `geography_id` int NULL DEFAULT 0,
-  PRIMARY KEY (`code`) USING BTREE
+  PRIMARY KEY (`province_code`) USING BTREE
 ) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_unicode_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------

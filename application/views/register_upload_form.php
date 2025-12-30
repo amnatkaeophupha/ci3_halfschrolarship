@@ -15,9 +15,7 @@
 									/>
 								</div>
 								<div class="col-md-12">
-								<h3 class="text-center" style="font-size:24px;">ใบสมัครทุนการศึกษา "ทุนคนละครึ่ง"</h3>
-								<h4 class="text-center" style="font-size:20px;">มหาวิทยาลัยราชภัฏพระนครศรีอยุธยา ประจำปีการศึกษา 2569</h4>
-								<h4 class="text-center" style="font-size:18px;">ระหว่างวันที่ 6 มกราคม 2569 - 27 กุมภาพันธ์ 2569</h4>
+									<?php $this->load->view('title_head_layout'); ?>
 								</div>
 							</div>
 							<style>
@@ -86,7 +84,7 @@
 											</style>
 											<tbody style="font-family: 'Sarabun', sans-serif;font-size:15px;">
 												<tr>
-												<form action="<?php echo site_url('member/upload'); ?>" method="post" enctype="multipart/form-data">
+												<form action="<?php echo site_url('member/upload_file'); ?>" method="post" enctype="multipart/form-data">
 													<td class="text-center">1</td>
 													<td>สำเนาบัตรประจำตัวประชาชน</td>
 													<td>
@@ -100,14 +98,13 @@
 													</td>
 													<td>
 														<input type="file" name="file_cid" class="form-control file-small" style="width:100%;">
-														<input type="text" name="id" value="<?= $applicant->id; ?>" hidden>
-														<input type="text" name="goto_pages" value="welcome/register_upload_form" hidden>
+														<input type="hidden" name="id" value="<?= $applicant->id; ?>">
 													</td>
 													<td><button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:12px;">อัปโหลด</button></td>
 												</form>
 												</tr>
 												<tr>
-												<form action="<?php echo site_url('member/upload'); ?>" method="post" enctype="multipart/form-data">
+												<form action="<?php echo site_url('member/upload_file'); ?>" method="post" enctype="multipart/form-data">
 													<td class="text-center">2</td>
 													<td>สำเนาใบแสดงผลการเรียน (Transcript) หรือใบรับรองผลการเรียน 5 ภาคเรียน</td>
 													<td>
@@ -121,14 +118,13 @@
 													</td>
 													<td>
 														<input type="file" name="file_transcript" class="form-control file-small" style="width:100%;">
-														<input type="text" name="id" value="<?= $applicant->id; ?>" hidden>
-														<input type="text" name="goto_pages" value="welcome/register_upload_form" hidden>
+														<input type="hidden" name="id" value="<?= $applicant->id; ?>">
 													</td>
 													<td><button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:12px;">อัปโหลด</button></td>
 												</form>
 												</tr>
 												<tr>
-												<form action="<?php echo site_url('member/upload'); ?>" method="post" enctype="multipart/form-data">
+												<form action="<?php echo site_url('member/upload_file'); ?>" method="post" enctype="multipart/form-data">
 													<td class="text-center">3</td>
 													<td>เอกสาร Portfolio</td>
 													<td>
@@ -142,8 +138,7 @@
 													</td>
 													<td>
 														<input type="file" name="file_portfolio" class="form-control file-small" style="width:100%;">
-														<input type="text" name="id" value="<?= $applicant->id; ?>" hidden>
-														<input type="text" name="goto_pages" value="welcome/register_upload_form" hidden>
+														<input type="hidden" name="id" value="<?= $applicant->id; ?>">
 													</td>
 													<td><button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:12px;">อัปโหลด</button></td>
 												</form>
@@ -151,9 +146,41 @@
 											</tbody>
 										</table>
 									</div>			
-									<div class="col-md-12 text-center">
-										<a href="<?= base_url(); ?>" class="btn btn-warning" aria-label="Left Align">บันทึกข้อมูล</a>
-									</div>
+										<?php
+											// ตรวจเอกสารครบไหม
+											$has_cid        = !empty($applicant->file_cid);
+											$has_transcript = !empty($applicant->file_transcript);
+											$has_portfolio  = !empty($applicant->file_portfolio);
+
+											$all_uploaded = $has_cid && $has_transcript && $has_portfolio;
+										?>
+
+										<div class="col-md-12 text-center" style="margin-top:20px;">
+
+											<?php if ($all_uploaded): ?>
+												<!-- ถ้าเอกสารครบ 3 รายการ ให้กดบันทึกได้ -->
+												<form action="<?= site_url('/welcome/confirm_upload'); ?>" method="post" style="display:inline-block;">
+													<input type="hidden" name="id" value="<?= $applicant->id; ?>">
+													<button type="submit"
+															class="btn btn-success"
+															style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px 20px;">
+														อัปโหลดสำเร็จ / บันทึกลงระบบ
+													</button>
+												</form>
+											<?php else: ?>
+												<!-- ถ้ายังไม่ครบ ให้ปุ่ม disable + แจ้งเตือน -->
+												<button type="button"
+														class="btn btn-default"
+														style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px 20px;"
+														disabled>
+													อัปโหลดสำเร็จ / บันทึกลงระบบ
+												</button>
+												<p class="text-danger" style="margin-top:10px;">
+													กรุณาอัปโหลดเอกสารให้ครบทั้ง 3 รายการก่อน (บัตรประชาชน, Transcript, Portfolio)
+												</p>
+											<?php endif; ?>
+
+										</div>
 							</div>
 						</div>
 					</div>

@@ -15,6 +15,15 @@ class Welcome extends CI_Controller {
 
 	public function index()
 	{
+		$data['applicants'] = $this->db
+        ->select('a.*, p.pro_name')
+        ->from('applicant AS a')
+        ->join('program AS p', 'a.pro_id = p.pro_id', 'left')
+        ->order_by('a.id', 'ASC')
+        ->get()
+        ->result();
+
+
 		$data['content'] = 'home';
 		$this->load->view('layout', $data);
 	}
@@ -74,12 +83,10 @@ class Welcome extends CI_Controller {
 		$this->form_validation->set_rules('birth_year', 'ปีเกิด', 'required');
 
 		$this->form_validation->set_rules('cid', 'เลขประจำตัวประชาชน', 'trim|required|exact_length[13]|numeric');
-
-		$this->form_validation->set_rules('address_number', 'ที่อยู่ เลขที่', 'trim|required');
+;
 		$this->form_validation->set_rules('address_subdistrict', 'ตำบล/แขวง', 'trim|required');
 		$this->form_validation->set_rules('address_district', 'อำเภอ/เขต', 'trim|required');
 		$this->form_validation->set_rules('address_province', 'จังหวัด', 'trim|required');
-		$this->form_validation->set_rules('address_zipcode', 'รหัสไปรษณีย์', 'trim|required|numeric');
 
 		$this->form_validation->set_rules('phone', 'เบอร์โทรศัพท์', 'trim|required|numeric|min_length[9]|max_length[10]');
 
@@ -101,6 +108,22 @@ class Welcome extends CI_Controller {
 			$this->load->view('layout', $data); // แสดงฟอร์มเดิม พร้อม error
 			return;
 		}
+
+		// --------------- ⭐ ตรวจเลขบัตรประชาชนซ้ำ ⭐ ------------------
+		$cid = $this->input->post('cid');
+
+		$exists = $this->db->where('cid', $cid)->get('applicant')->row();
+
+		if ($exists) {
+			$this->session->set_flashdata('error',
+				'เลขบัตรประชาชนนี้ถูกใช้สมัครแล้ว กรุณาตรวจสอบข้อมูลของคุณ หรือใช้เลขบัตรที่ถูกต้อง'
+			);
+
+			redirect(base_url('index.php/welcome/register_form'));
+			return;
+		}
+		// -------------------------------------------------------------
+
 
 		// ---------- ถ้าตรวจสอบผ่าน ค่อยบันทึก ----------
 			$data = array(
@@ -155,7 +178,7 @@ class Welcome extends CI_Controller {
 			}
 	}
 
-	public function register_upload_form($id)
+	public function register_upload_form()
 	{	
 		$id = $this->uri->segment(3);
 		$applicant = $this->db
@@ -163,9 +186,74 @@ class Welcome extends CI_Controller {
         ->get('applicant')
         ->row();
 
+		if (!$applicant) {
+			$this->session->set_flashdata('error', 'ไม่พบผู้สมัครที่ระบุ');
+			redirect(base_url('index.php/welcome'));
+			return;
+		}
+
 		$data['applicant'] = $applicant;
 		$data['content'] = 'register_upload_form';
 		$this->load->view('layout', $data);
 
 	}
+
+	public function confirm_upload()
+	{
+		$id = $this->input->post('id');
+
+		if (empty($id)) {
+			$this->session->set_flashdata('error', 'ไม่พบรหัสผู้สมัคร');
+			redirect('welcome/index');
+			return;
+		}
+
+		// ดึงข้อมูลผู้สมัคร
+		$applicant = $this->db->where('id', $id)->get('applicant')->row();
+
+		if (!$applicant) {
+			$this->session->set_flashdata('error', 'ไม่พบข้อมูลผู้สมัคร');
+			redirect('welcome/index');
+			return;
+		}
+
+		// ตรวจเอกสารครบไหม
+		$has_cid        = !empty($applicant->file_cid);
+		$has_transcript = !empty($applicant->file_transcript);
+		$has_portfolio  = !empty($applicant->file_portfolio);
+
+		if (!($has_cid && $has_transcript && $has_portfolio)) {
+			// กันกรณีคนยิง request มาตรง ๆ ทั้งที่ยังไม่ครบ
+			$this->session->set_flashdata('error', 'เอกสารยังไม่ครบ ไม่สามารถบันทึกการอัปโหลดได้');
+			redirect(base_url('index.php/welcome/register_upload_form/'.$id));
+			return;
+		}
+
+		// บันทึกสถานะลงระบบ (ปรับชื่อ field ตามที่คุณใช้จริง)
+		$this->db->where('id', $id)->update('applicant', [
+			'upload_status' => 'completed',   // หรือ 1 ถ้าใช้ tinyint
+			'updated_at'    => date('Y-m-d H:i:s')
+		]);
+
+		$this->session->set_flashdata('success', 'บันทึกข้อมูลการอัปโหลดเอกสารเรียบร้อยแล้ว');
+		// จะให้กลับไปหน้าไหนต่อ เลือกได้ เช่น ไปหน้า admin list หรือหน้าแรก
+		redirect(base_url('index.php/welcome/registration_success/'.$id));
+	}
+
+	public function registration_success($id)
+	{
+		// ดึงข้อมูลผู้สมัครมาแสดงชื่อ
+		$applicant = $this->db->where('id', $id)->get('applicant')->row();
+
+		if (!$applicant) {
+			$this->session->set_flashdata('error', 'ไม่พบข้อมูลผู้สมัคร');
+			redirect('welcome/index');
+			return;
+		}
+
+		$data['applicant'] = $applicant;
+		$data['content']   = 'registration_success';
+		$this->load->view('layout', $data);
+	}
+
 }

@@ -83,7 +83,7 @@
 						</ul>
 						<ul class="nav navbar-nav pull-right">
 							<li>
-								<a href="#"><i class="fa fa-lock" title="Login"></i><span class="hidden-sm hidden-xs" style="font-size:9pt;">Login</span></a>
+								<a href="<?php echo base_url('index.php/admin/login'); ?>"><i class="fa fa-lock" title="Login"></i><span class="hidden-sm hidden-xs" style="font-size:9pt;">Login</span></a>
 							</li>
 						</ul>
 					</div>
@@ -129,8 +129,8 @@
 						</li>  -->
 						<li><a href="<?php echo base_url(); ?>">หน้าแรกทุนคนละครึ่ง</a></li> 
 						<li><a href="<?php echo base_url('public/945.pdf'); ?>" target="_blank" >ประกาศ</a></li> 
-						<li><a href="">ประกาศผล</a></li> 
-						<li><a href="">ติดต่อเรา</a></li>						
+						<!-- <li><a href="">ประกาศผล</a></li>  -->
+						<li><a href="<?php echo base_url('index.php/admin/login'); ?>">สำหรับผู้ดูแลระบบ</a></li>						
 					</ul>
 				</div>
 			</div>
@@ -157,7 +157,7 @@
 	<div class="copyright">
 		<div class="container">
 			<p class="pull-left">
-				&copy; Copyright 2018 Phranakhon Si Ayutthaya Rajabhat University | All Rights Reserved.
+				&copy; Copyright 2025 Phranakhon Si Ayutthaya Rajabhat University | All Rights Reserved.
 			</p>
 		</div>
 	</div>

@@ -15,9 +15,7 @@
 								/>
 							</div>
 							<div class="col-md-12">
-								<h3 class="text-center" style="font-size:24px;">ใบสมัครทุนการศึกษา "ทุนคนละครึ่ง"</h3>
-								<h4 class="text-center" style="font-size:20px;">มหาวิทยาลัยราชภัฏพระนครศรีอยุธยา ประจำปีการศึกษา 2569</h4>
-								<h4 class="text-center" style="font-size:18px;">ระหว่างวันที่ 6 มกราคม 2569 - 27 กุมภาพันธ์ 2569</h4>
+								<?php $this->load->view('title_head_layout'); ?>
 							</div>
 						</div>
 						<style>
@@ -52,7 +50,10 @@
 						<form action="<?php echo base_url('index.php/welcome/submit_registration'); ?>" method="post" enctype="multipart/form-data">
 							
 							<div class="col-md-6">
-								<div class="form-group"><label>สมัครจากโรงเรียน/สถาบันเครือข่าย</label><input type="text" name="school_name" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>สมัครจากโรงเรียน/สถาบันเครือข่าย</label><span style="color:red;">*</span>
+									<input type="text" name="school_name" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group"><label>จังหวัด</label>
@@ -72,11 +73,14 @@
 								<div class="alert alert-success" role="alert" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px;">ข้อมูลส่วนตัว</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group"><label>ชื่อ นาย/นาง/นางสาว</label><input type="text" name="full_name" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>ชื่อ นาย/นาง/นางสาว</label><span style="color:red;">*</span>
+									<input type="text" name="full_name" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-6">
 								<div class="form-group">
-									<label>วัน/เดือน/ปีเกิด</label>
+									<label>วัน/เดือน/ปีเกิด</label><span style="color:red;">* บังคับกรอก</span>
 									<div class="row">
 										<div class="col-xs-4">
 											<?php 
@@ -112,16 +116,28 @@
 								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>เลขประจำตัวประชาชน</label><input type="text" name="cid" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>เลขประจำตัวประชาชน</label><span style="color:red;">*</span>
+									<input type="text" name="cid" class="form-control" style="width:100%;" placeholder="บังคับกรอกเลข 13 หลัก">
+								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>เชื้อชาติ</label><input type="text" name="ethnicity" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>เชื้อชาติ</label><span style="color:red;">*</span>
+									<input type="text" name="ethnicity" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>สัญชาติ</label><input type="text" name="nationality" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>สัญชาติ</label><span style="color:red;">*</span>
+									<input type="text" name="nationality" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>ศาสนา</label><input type="text" name="religion" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>ศาสนา</label><span style="color:red;">*</span>
+									<input type="text" name="religion" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-3">
 								<div class="form-group"><label>ที่อยู่ตามทะเบียนบ้าน เลขที่</label><input type="text" name="address_number" class="form-control" style="width:100%;"></div>
@@ -137,7 +153,7 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>จังหวัด</label>
+									<label>จังหวัด</label><span style="color:red;">*</span>
 									<select name="address_province" id="address_province" class="form-control">
 										<option value="">-- เลือกจังหวัด --</option>
 										<?php if (!empty($provinces)): ?>
@@ -152,7 +168,7 @@
 							</div>
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>อำเภอ/เขต</label>
+									<label>อำเภอ/เขต</label><span style="color:red;">*</span>
 									<select name="address_district" id="address_amphoe" class="form-control">
 										<option value="">-- เลือกอำเภอ/เขต --</option>
 									</select>
@@ -160,27 +176,30 @@
 							</div>														
 							<div class="col-md-3">
 								<div class="form-group">
-									<label>ตำบล/แขวง</label>
+									<label>ตำบล/แขวง</label><span style="color:red;">*</span>
 									<select name="address_subdistrict" id="address_district" class="form-control">
 										<option value="">-- เลือกตำบล/แขวง --</option>
 									</select>
 								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group">
+								<div class="form-group"><span style="color:red;">*</span>
 									<label>รหัสไปรษณีย์</label>
 									<input type="text" name="address_zipcode" id="address_zipcode"
 										class="form-control" style="width:100%;" readonly>
 								</div>
 							</div>
 							<div class="col-md-3">
-								<div class="form-group"><label>เบอร์โทรศัพท์</label><input type="text" name="phone" class="form-control" style="width:100%;"></div>
+								<div class="form-group">
+									<label>เบอร์โทรศัพท์</label><span style="color:red;">*</span>
+									<input type="text" name="phone" class="form-control" style="width:100%;" placeholder="บังคับกรอก">
+								</div>
 							</div>
 							<div class="col-md-12">
 								<div class="alert alert-danger" role="alert" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px;">ข้อมูลการศึกษาปัจุบัน</div>
 							</div>
 							<div class="col-md-12">
-								<div class="form-group"><label>ระดับการศึกษาปัจจุบัน : </label>
+								<div class="form-group"><label>ระดับการศึกษาปัจจุบัน : </label><span style="color:red;">*</span>
 									<label class="radio-inline">
 									<input type="radio" name="education_level" value="มัธยมศึกษาตอนปลาย">มัธยมศึกษาตอนปลาย
 									</label>
@@ -193,8 +212,10 @@
 								</div>
 							</div>
 							<div class="col-md-12 form-inline" style="margin-bottom:20px;">
-								<label>ผลการเรียนสะสม 5 ภาคเรียน</label>
-								<div class="form-group"><input type="text" name="gpa" class="form-control" style="width:100%;"></div>
+								<label>ผลการเรียนสะสม 5 ภาคเรียน</label><span style="color:red;">*</span>
+								<div class="form-group">
+									<input type="text" name="gpa" class="form-control" style="width:100%;" placeholder="บังคับกรอก เช่น 3.25">
+								</div>
 							</div>
 							<div class="col-md-12">
 								<div class="alert alert-success" role="alert" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px;">ข้อมูลการสมัคร</div>
@@ -206,7 +227,7 @@
 									</div>
 									<div class="col-md-12">
 										<?php $program = $this->db->query('SELECT * FROM program'); ?>
-										<div class="form-group"><label>เลือกสาขา</label>
+										<div class="form-group"><label>เลือกสาขา</label><span style="color:red;">*</span>
 										<select name="pro_id" id="pro_id" class="form-control">
 											<option value="">-- เลือกสาขา --</option>
 											<?php foreach ($program->result()  as $pro): ?>
@@ -240,7 +261,6 @@
 								<p style="text-indent: 30px">ข้าพเจ้าขอรับรองข้อมูลข้างต้นดังนี้ เป็นความจริงทุกประการ หากมีข้อมูลอันเป็นเท็จ ข้าพเจ้ายินยอมให้ตัดสิทธิ์การสมัครทุน สถาบันเครือข่ายมหาวิทยาลัยราชภัฏพระนครศรีอยุธยา ปีการศึกษา 2568 ทันที</p>
 							</div>	
 							<div class="col-md-12 text-center">
-								<p class="text-danger">เมื่อส่งข้อมูลสมัครแล้วต้องทำการส่งเอกสารที่เกี่ยวข้องต่อไป</p>
 								<button type="submit" class="btn btn-primary" style="font-family: 'Sarabun', sans-serif;font-size:16px;padding:6px 20px;">ต่อไป</button>
 							</div>
 						</form>	

@@ -1,21 +1,19 @@
-<!-- <div style="margin-bottom:20px;">
+<div style="margin-bottom:20px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<img src="<?php echo base_url('public'); ?>/poster.jpg" class="img-responsive" />
+				<img src="<?php echo base_url('public'); ?>/banner_1140_428.jpg" class="img-responsive" />
 			</div>
 		</div>
 	</div>
-</div> -->
+</div>
 
 <div style="margin-bottom:10px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="jumbotron" style="font-family: 'Sarabun', sans-serif; font-weight: 400;">
-				<h2>Hello, world!</h2>
-				<p>...</p>
-				<p><a class="btn btn-primary btn-lg" href="<?php echo base_url('index.php/welcome/register_form'); ?>" role="button">สมัครเรียน</a></p>
+				<div style="text-align: center; margin-top: 10px; margin-bottom: 10px; font-family: 'Sarabun', sans-serif;">
+					<a class="btn btn-primary btn-lg" href="<?php echo base_url('index.php/welcome/register_form'); ?>" role="button">สมัครเรียน</a>
 				</div>
 			</div>
 		</div>
@@ -36,7 +34,7 @@
 	}
 </style>
 
-<div style="margin-bottom:20px;">
+<div style="margin-bottom:50px; margin-top:0px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
@@ -73,15 +71,17 @@
 
 
 
-<div style="margin-bottom:20px;">
+<!-- <div style="margin-bottom:20px;">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<div class="alert alert-success" role="alert">...</div>
-				<div class="alert alert-info" role="alert">...</div>
-				<div class="alert alert-warning" role="alert">...</div>
-				<div class="alert alert-danger" role="alert">...</div>
+				<div class="alert alert-info" role="alert">
+					<h4 class="alert-heading">ข่าวประชาสัมพันธ์</h4>
+					<p>...</p>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
+</div> -->
+
+

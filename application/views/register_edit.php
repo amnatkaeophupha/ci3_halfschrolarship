@@ -16,9 +16,7 @@
 
 								</div>
 								<div class="col-md-12">
-								<h3 class="text-center" style="font-size:24px;">ใบสมัครทุนการศึกษา "ทุนคนละครึ่ง"</h3>
-								<h4 class="text-center" style="font-size:20px;">มหาวิทยาลัยราชภัฏพระนครศรีอยุธยา ประจำปีการศึกษา 2569</h4>
-								<h4 class="text-center" style="font-size:18px;">ระหว่างวันที่ 6 มกราคม 2569 - 27 กุมภาพันธ์ 2569</h4>
+									<?php $this->load->view('title_head_layout'); ?>
 								</div>
 							</div>
 							<style>
@@ -391,7 +389,4 @@ $(document).ready(function(){
 
 });
 </script>
-
-/* มีปัญหา up แก้ไขไม่ได้ */
-<?php include_once 'layout_upload.php'; ?>
 

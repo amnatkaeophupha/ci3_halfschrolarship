@@ -98,11 +98,9 @@ class Member extends CI_Controller {
 		$this->form_validation->set_rules('school_province', 'จังหวัดของโรงเรียน', 'trim|required');
 		$this->form_validation->set_rules('full_name', 'ชื่อผู้สมัคร', 'trim|required');
 		$this->form_validation->set_rules('cid', 'เลขประจำตัวประชาชน', 'trim|required|exact_length[13]|numeric');
-		$this->form_validation->set_rules('address_number', 'ที่อยู่ เลขที่', 'trim|required');
 		$this->form_validation->set_rules('address_subdistrict', 'ตำบล/แขวง', 'trim|required');
 		$this->form_validation->set_rules('address_district', 'อำเภอ/เขต', 'trim|required');
 		$this->form_validation->set_rules('address_province', 'จังหวัด', 'trim|required');
-		$this->form_validation->set_rules('address_zipcode', 'รหัสไปรษณีย์', 'trim|required|numeric');
 		$this->form_validation->set_rules('phone', 'เบอร์โทรศัพท์', 'trim|required|numeric');
 		$this->form_validation->set_rules('education_level', 'ระดับการศึกษา', 'required');
 		$this->form_validation->set_rules('gpa', 'เกรดเฉลี่ยสะสม', 'trim|required');
@@ -185,103 +183,117 @@ class Member extends CI_Controller {
 		
 		}
 
-		redirect(base_url('index.php/member/view/'.$id));
+		redirect(base_url('index.php/welcome/register_upload_form/'.$id));
 	
-		
 	}
 
-	public function upload()
+	public function upload_file()
 	{
 		$id = $this->input->post('id');
-		
-		$upload_path = './uploads/applicant/';
-    
+
+		if (empty($id)) {
+			$this->session->set_flashdata('error', 'ไม่พบรหัสผู้สมัคร');
+			redirect('welcome/index');
+			return;
+		}
+
+		// ตรวจว่ามีผู้สมัครจริงไหม
+		$applicant = $this->db->where('id', $id)->get('applicant')->row();
+		if (!$applicant) {
+			$this->session->set_flashdata('error', 'ไม่พบข้อมูลผู้สมัคร');
+			redirect('welcome/index');
+			return;
+		}
+
+		// --- ตรวจว่าฟอร์มนี้เป็นไฟล์ประเภทไหน ---
+		$file_field = null;   // ชื่อ input file ใน $_FILES
+		$db_column  = null;   // ชื่อคอลัมน์ในตาราง applicant
+		$suffix     = null;   // ส่วนท้ายชื่อไฟล์ เช่น cid, transcript, portfolio
+		$label      = null;   // เอาไว้แสดงในข้อความ error/success
+
+		if (!empty($_FILES['file_cid']['name'])) {
+			$file_field = 'file_cid';
+			$db_column  = 'file_cid';
+			$suffix     = 'cid';
+			$label      = 'สำเนาบัตรประจำตัวประชาชน';
+		} elseif (!empty($_FILES['file_transcript']['name'])) {
+			$file_field = 'file_transcript';
+			$db_column  = 'file_transcript';
+			$suffix     = 'transcript';
+			$label      = 'สำเนาใบแสดงผลการเรียน / ใบรับรองผลการเรียน';
+		} elseif (!empty($_FILES['file_portfolio']['name'])) {
+			$file_field = 'file_portfolio';
+			$db_column  = 'file_portfolio';
+			$suffix     = 'portfolio';
+			$label      = 'เอกสาร Portfolio';
+		}
+
+		if ($file_field === null) {
+			$this->session->set_flashdata('error', 'กรุณาเลือกไฟล์ก่อนอัปโหลด');
+			redirect('welcome/register_upload_form/'.$id);
+			return;
+		}
+
+		// --- ตรวจสอบนามสกุลไฟล์ ---
+		$file_ext = strtolower(pathinfo($_FILES[$file_field]['name'], PATHINFO_EXTENSION));
+		$allowed_ext = ['jpg', 'jpeg', 'png', 'pdf'];
+
+		if (!in_array($file_ext, $allowed_ext)) {
+			$this->session->set_flashdata('error', 'ชนิดไฟล์ของ '.$label.' ไม่ถูกต้อง ต้องเป็น JPG, PNG หรือ PDF เท่านั้น');
+			redirect('welcome/register_upload_form/'.$id);
+			return;
+		}
+
+		// --- ตั้งค่า upload ---
+		$upload_path = FCPATH . 'uploads/applicant/';
+
+		$config['upload_path']      = $upload_path;
+		$config['allowed_types']    = 'jpg|jpeg|png|pdf';
+		$config['max_size']         = 10000; // 10MB
+		$config['file_ext_tolower'] = TRUE;
+		$config['remove_spaces']    = TRUE;
+		$config['overwrite']        = TRUE; // อัปโหลดทับไฟล์เดิม
+		$config['file_name']        = $id . '_' . $suffix . '.' . $file_ext; // เช่น 4_cid.pdf, 4_transcript.jpg
+
+		// ถ้าโฟลเดอร์ยังไม่มีก็สร้าง
 		if (!is_dir($upload_path)) {
-			mkdir($upload_path, 0777, true);
+			mkdir($upload_path, 0777, TRUE);
 		}
 
-		// map ชื่อ field => คำต่อท้ายไฟล์
-		$file_fields = array(
-			'file_cid'        => 'cid',
-			'file_transcript' => 'transcript',
-			'file_portfolio'  => 'portfolio'
-		);
+		// โหลด/ตั้งค่า upload library
+		$this->load->library('upload');
+		$this->upload->initialize($config);
 
-		$data_update = array();
-    	$upload_errors = array();
+		// --- ทำการอัปโหลด ---
+		if (!$this->upload->do_upload($file_field)) {
+			$this->session->set_flashdata('error', 'อัปโหลด '.$label.' ล้มเหลว: '.$this->upload->display_errors('', ''));
+			redirect('welcome/register_upload_form/'.$id);
+			return;
+		}
 
-		foreach ($file_fields as $field_name => $suffix) {
+		// ข้อมูลไฟล์ใหม่
+		$upload_data = $this->upload->data();
+		$newFileName = $upload_data['file_name'];  // ปกติจะเท่ากับ $config['file_name']
 
-			// เช็คว่ามีการเลือกไฟล์มาหรือไม่
-			if (!empty($_FILES[$field_name]['name'])) {
-
-				// หาสกุลไฟล์เดิม
-				$ext = pathinfo($_FILES[$field_name]['name'], PATHINFO_EXTENSION);
-
-				// ตั้งชื่อไฟล์ใหม่ : id_ชื่อ เช่น 15_cid.pdf
-				$new_name = $id . '_' . $suffix . '.' . strtolower($ext);				
-				$full_path = $upload_path . $new_name;
-
-				// ลบไฟล์เดิมก่อนอัปโหลดใหม่
-				if (file_exists($full_path)) {
-					unlink($full_path);
-				}
-				
-				// config upload
-				$config['upload_path']   = $upload_path;
-				$config['allowed_types'] = 'pdf|jpg|jpeg|png';
-				$config['max_size']      = 10000; // 10MB
-				$config['file_name']     = $new_name;
-				$config['overwrite']     = TRUE;
-
-				$this->upload->initialize($config);
-
-				if (!$this->upload->do_upload($field_name)) {
-
-					// เก็บ error ไว้ (แต่ไม่หยุดทันที เผื่อ field อื่นอัปโหลดได้)
-					$upload_errors[$field_name] = $this->upload->display_errors('', '');
-
-				} else {
-
-					$upload_data = $this->upload->data();
-
-					// เก็บชื่อไฟล์ (หรือ path) ลง array สำหรับ update DB
-					// ถ้าต้องการเก็บเฉพาะชื่อไฟล์:
-					$data_update[$field_name] = $upload_data['file_name'];
-
-					// ถ้าต้องการเก็บ path เต็ม:
-					// $data_update[$field_name] = 'uploads/applicant/' . $upload_data['file_name'];
-				}
+		// --- ลบไฟล์เก่าที่เป็นคนละนามสกุลของเอกสารเดียวกัน ---
+		foreach (['jpg','jpeg','png','pdf'] as $ext) {
+			$candidate = $upload_path . $id . '_' . $suffix . '.' . $ext;
+			if ($candidate !== $upload_path . $newFileName && file_exists($candidate)) {
+				@unlink($candidate);
 			}
 		}
 
-		// ถ้ามีไฟล์ที่อัปโหลดสำเร็จ → update ตาราง applicant
-		if (!empty($data_update)) {
-			$this->db->where('id', $id);
-			$this->db->update('applicant', $data_update);
-		}
+		// --- บันทึกชื่อไฟล์ใหม่ลง DB ---
+		$this->db->where('id', $id)->update('applicant', [
+			$db_column => $newFileName
+		]);
 
-		// จัดการข้อความแจ้งเตือน
-		if (!empty($upload_errors)) {
-			// รวบข้อความ error ไว้แจ้งเตือน
-			$msg = "อัปโหลดบางไฟล์ไม่สำเร็จ:<br>";
-			foreach ($upload_errors as $field => $err) {
-				$msg .= "- {$field} : {$err}<br>";
-			}
-			$this->session->set_flashdata('error', $msg);
-		} else {
-			$this->session->set_flashdata('success', 'อัปโหลดเอกสารเรียบร้อยแล้ว');
-		}
-
-		if($this->input->post('goto_pages')=='welcome/register_upload_form'){
-
-			redirect(base_url('index.php/welcome/register_upload_form/'.$id));
-		
-		}else{
-		
-			redirect(base_url('index.php/member/view/'.$id));
-		}
-		
-
+		$this->session->set_flashdata('success', 'อัปโหลดไฟล์ '.$label.' สำเร็จ และบันทึกเป็น '.$newFileName);
+		redirect(base_url('index.php/welcome/register_upload_form/'.$id));
 	}
+
+
+
+
+
 }
